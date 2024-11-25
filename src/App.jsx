@@ -14,7 +14,7 @@ export function App() {
         <main>
           <Routes>
             <Route path="/" element={<Lobby/>} />
-            <Route path="/codeblock" element={<Codeblock/>} />
+            <Route path="/codeblock/:codeId" element={<Codeblock/>} />
           </Routes>
         </main>
         <AppFooter/>

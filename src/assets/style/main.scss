@@ -7,7 +7,12 @@
 @import 'base/helpers.scss';
 @import 'base/layout.scss';
 
+// pages 
+@import 'pages/CodeBlock.scss';
+
 // cmps
 @import 'cmps/AppFooter.scss';
 @import 'cmps/AppHeader.scss';
 
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/theme/material.css';
