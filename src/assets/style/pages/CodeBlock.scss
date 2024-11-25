@@ -1,14 +1,9 @@
-.code-block{
-
-    .text-form{
-        
-        .text-area{
-            width: 90vh;
-            height: 50vh;
-        }
-
-        button{
-            width: fit-content;
-        }
+.code-block {
+    .indicator {
+        color: black;
+        padding: 3px;
+        border-radius: 4px;
+        margin-top: 1em;
     }
-    }
+
+}
