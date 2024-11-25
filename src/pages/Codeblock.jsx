@@ -30,7 +30,7 @@ export function Codeblock() {
     return (
         <section className="code-block  flex align-center column">
             <h1>{code.name}</h1>
-            <TextEditor codeToEdit={code} isMentor={mentor}/>
+            <TextEditor initialCode={code.initialCode} solution={code.solution} isMentor={mentor}/>
         </section>
     )
 }

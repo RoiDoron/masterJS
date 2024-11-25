@@ -59,18 +59,29 @@ function _demoData() {
     let codes = utilService.loadFromStorage(STORAGE_KEY)
     if (!codes || !codes.length) {
         codes = []
-        codes.push(_createCode('Async case',
-            "async function fetchData() {\n  try {\n    let response = await fetch('https://api.example.com/data');\n    let data = await response.json();\n    console.log(data);\n  } catch (error) {\n    console.error(error);\n  }\n}",
-            "async function fetchData() {\n  try {\n    let response = await fetch('https://api.example.com/data');\n    let data = await response.json();\n    console.log(data);\n  } catch (error) {\n    console.error(error);\n  }\n}"))
-        codes.push(_createCode('For loop example',
+        codes.push(_createCode(
+            'Async case',
+            "function fetchData() {\n    // Add your async code here\n    return new Promise((resolve) => {\n        setTimeout(() => resolve('Data fetched!'), 1000);\n    });\n}",
+            "async function fetchData() {\n  try {\n    let response = await fetch('https://api.example.com/data');\n    let data = await response.json();\n    console.log(data);\n  } catch (error) {\n    console.error(error);\n  }\n}"
+        ))
+
+        codes.push(_createCode(
+            'For loop example',
             "for (let i = 0; i < 10; i++) {\n  console.log(i);\n}",
-            "for (let i = 0; i < 10; i++) {\n  console.log(i);\n}"))
-        codes.push(_createCode("Function definition",
+            "for (let i = 0; i < 10; i++) {\n  console.log(i);\n}"
+        ))
+
+        codes.push(_createCode(
+            "Function definition",
             "function add(a, b) {\n  return a + b;\n}\nconsole.log(add(2, 3));",
-            "function add(a, b) {\n  return a + b;\n}\nconsole.log(add(2, 3));"))
-        codes.push(_createCode("Class declaration",
+            "function add(a, b) {\n  return a + b;\n}\nconsole.log(add(2, 3));"
+        ))
+
+        codes.push(_createCode(
+            "Class declaration",
             "class Person {\n  constructor(name, age) {\n    this.name = name;\n    this.age = age;\n  }\n\n  greet() {\n    console.log('Hello, ' + this.name);\n  }\n}\n\nconst person1 = new Person('Tom', 30);\nperson1.greet();",
-            "class Person {\n  constructor(name, age) {\n    this.name = name;\n    this.age = age;\n  }\n\n  greet() {\n    console.log('Hello, ' + this.name);\n  }\n}\n\nconst person1 = new Person('Tom', 30);\nperson1.greet();"))
+            "class Person {\n  constructor(name, age) {\n    this.name = name;\n    this.age = age;\n  }\n\n  greet() {\n    console.log('Hello, ' + this.name);\n  }\n}\n\nconst person1 = new Person('Tom', 30);\nperson1.greet();"
+        ))
         utilService.saveToStorage(STORAGE_KEY, codes)
     }
 

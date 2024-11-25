@@ -2,30 +2,37 @@ import { useState } from "react"
 import { UnControlled as CodeMirror } from 'react-codemirror2'
 import 'codemirror/lib/codemirror.css'; // Import the base CodeMirror styles
 import 'codemirror/mode/javascript/javascript'; // Import the JavaScript mode
+import { UserMsg } from "./UserMsg";
+import { showSuccessMsg } from "../services/event-bus.service";
 
-export function TextEditor({ codeToEdit,isMentor }) {
-    const [code, setCode] = useState(codeToEdit)
+export function TextEditor({ initialCode, isMentor, solution }) {
+    const [code, setCode] = useState(initialCode)
+
+    function handelChange(newCode){
+        setCode(newCode)
+        if (newCode === solution) success()
+    }
+
+    function success() {
+        showSuccessMsg('Congratulation! you are correct!')
+    }
 
     return (
         <>
-            {/* <form className="flex column align-center text-form" action="">
-                <textarea className="text-area" name="codeArea" >{code.initialCode}</textarea>
-                <button>Submit</button>
-            </form> */}
-
-
             <CodeMirror
-                value={code.initialCode}
+                value={code}
                 options={{
                     mode: 'javascript',
                     theme: 'material',
                     lineNumbers: true,
-                    readOnly:isMentor
+                    readOnly: isMentor
                 }}
-                onChange={(editor, data, value) => {
+                onChange={(editor, data,value) => {
+                    handelChange(value)
+
                 }}
             />
-            
+            <UserMsg />
         </>
     )
 }
