@@ -9,23 +9,22 @@ import { loadCodes } from "../store/actions/code.action";
 
 
 export function Lobby() {
-    // const [codes, setCodes] = useState()
-    const role = useSelector(storeState => storeState.roleModule.role)
+    // const role = useSelector(storeState => storeState.roleModule.role)
     const codes = useSelector(storeState => storeState.codeModule.codes)
 
     useEffect(() => {
          loadCodes()
 
-        socketService.emit(SOCKET_EMIT_MY_ROLE, role);
+        // socketService.emit(SOCKET_EMIT_MY_ROLE, role);
 
-        socketService.on(SOCKET_EVENT_ASSIGN_ROLE, (data) => {
-            codeService.saveSocketId(data.socketId,data.role)
-            setRole(data.role)
-        });
+        // socketService.on(SOCKET_EVENT_ASSIGN_ROLE, (data) => {
+        //     codeService.saveSocketId(data.socketId,data.role)
+        //     setRole(data.role)
+        // });
 
-        return () => {
-            socketService.off('assignRole');
-        }
+        // return () => {
+        //     socketService.off('assignRole');
+        // }
 
     }, [])
 

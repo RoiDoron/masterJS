@@ -2,10 +2,11 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { TextEditor } from "../cmps/TextEditor"
 import { codeService } from "../services/code-block.service"
-import { SOCKET_EVENT_EDIT_CODE, SOCKET_EVENT_MENTOR_LEAVE, socketService } from "../services/socket.service"
+import { SOCKET_EMIT_MY_ROLE, SOCKET_EVENT_ASSIGN_ROLE, SOCKET_EVENT_EDIT_CODE, SOCKET_EVENT_MENTOR_LEAVE, socketService } from "../services/socket.service"
 import { useDispatch, useSelector } from "react-redux"
 import { UPDATE_CODE } from "../store/reducers/code.reducer"
 import { getActionEditCode, updateCode } from "../store/actions/code.action"
+import { setRole } from "../store/actions/role.action"
 
 
 export function Codeblock() {
@@ -17,23 +18,37 @@ export function Codeblock() {
 
     useEffect(() => {
         if (!code) loadCode()
-            
-            socketService.on(SOCKET_EVENT_MENTOR_LEAVE, (instructor)=>{
-                console.log('hi',instructor)
-                backToLooby()
-            })
 
-            
+        socketService.emit(SOCKET_EMIT_MY_ROLE, role);
+
+        socketService.on(SOCKET_EVENT_ASSIGN_ROLE, (data) => {
+            codeService.saveSocketId(data.socketId, data.role)
+            setRole(data.role)
+        });
+
+        socketService.on(SOCKET_EVENT_MENTOR_LEAVE, (instructor) => {
+            console.log('hi', instructor)
+            backToLooby()
+        })
+
+        return () => {
+            socketService.off(SOCKET_EVENT_ASSIGN_ROLE)
+            socketService.off(SOCKET_EVENT_MENTOR_LEAVE)
+            socketService.emit('leave-room', role)
+        }
+
+
     }, [code])
 
     function codeEdit(newCode) {
-        
+
         const updatedCode = code
         updatedCode.studentCode = newCode
         updateCode(updatedCode)
     }
 
-    function backToLooby(){
+    function backToLooby() {
+        setRole('')
         navigate('/')
     }
 
