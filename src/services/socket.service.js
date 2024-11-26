@@ -4,8 +4,12 @@ import io from 'socket.io-client'
 export const SOCKET_EVENT_EDIT_CODE = 'code-edit'
 
 // role
-export const SOCKET_EVENT_MY_ROLE = 'my-current-role'
-export const SOCKET_EMIT_ASSIGN_ROLE = 'assignRole'
+export const SOCKET_EMIT_MY_ROLE = 'my-current-role'
+export const SOCKET_EVENT_ASSIGN_ROLE = 'assignRole'
+
+// mentor leave
+export const SOCKET_EVENT_MENTOR_LEAVE = 'mentor-leave'
+export const SOCKET_EVENT_MENTOR_LOGGED_IN = 'is-instructor-logged-in'
 
 
 
@@ -28,7 +32,6 @@ function createSocketService() {
         },
         on(eventName, cb) {
             socket.on(eventName, cb)
-            console.log('this is happening')
         },
         off(eventName, cb = null) {
             if (!socket) return;
