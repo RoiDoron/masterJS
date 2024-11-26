@@ -1,5 +1,6 @@
 import { httpService } from './http.service.js'
 
+const STORAGE_KEY_SOCKET_ID = 'loggedinUser'
 
 const BASE_URL = 'code/'
 export const codeService = {
@@ -8,6 +9,8 @@ export const codeService = {
     save,
     remove,
     getEmptyCode,
+    saveSocketId,
+    getSocketId
 }
 
 function query() {
@@ -23,8 +26,14 @@ function remove(codeId) {
 }
 
 function save(code) {
+    const data ={
+        code,
+        socketId:getSocketId()._id
+    }
+    console.log(data);
+    
     if (code._id) {
-        return httpService.put(BASE_URL, code)
+        return httpService.put(BASE_URL+code._id, data)
     } else {
         return httpService.post(BASE_URL, code)
     }
@@ -39,6 +48,18 @@ function getEmptyCode() {
     }
 }
 
+function saveSocketId(socketId,role){
+    const socketIdentity ={
+        _id :socketId,
+        role
+    }
+    sessionStorage.setItem(STORAGE_KEY_SOCKET_ID, JSON.stringify(socketIdentity))
+    return saveSocketId
+}
+
+function getSocketId() {
+    return JSON.parse(sessionStorage.getItem(STORAGE_KEY_SOCKET_ID))
+}
 
 
 

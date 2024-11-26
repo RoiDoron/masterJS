@@ -1,10 +1,12 @@
 import { combineReducers, compose, createStore } from "redux";
 import { roleReducer } from "./reducers/role.reducer";
+import { codeReducer } from "./reducers/code.reducer";
 
 
 
 const rootReducer = combineReducers({
-   roleModule: roleReducer
+   roleModule: roleReducer,
+   codeModule: codeReducer
 })
 
 const middleware = (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__() : undefined
