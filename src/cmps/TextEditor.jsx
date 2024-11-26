@@ -5,7 +5,7 @@ import 'codemirror/mode/javascript/javascript'; // Import the JavaScript mode
 import { UserMsg } from "./UserMsg";
 import { showSuccessMsg } from "../services/event-bus.service";
 
-export function TextEditor({ initialCode, isMentor, solution }) {
+export function TextEditor({ initialCode, role, solution }) {
     const [code, setCode] = useState(initialCode)
 
     function handelChange(newCode){
@@ -16,6 +16,10 @@ export function TextEditor({ initialCode, isMentor, solution }) {
     function success() {
         showSuccessMsg('Congratulation! you are correct!')
     }
+    function isMentor(){
+        if(role === 'instructor') return true
+        else return false
+    }
 
     return (
         <>
@@ -25,7 +29,7 @@ export function TextEditor({ initialCode, isMentor, solution }) {
                     mode: 'javascript',
                     theme: 'material',
                     lineNumbers: true,
-                    readOnly: isMentor
+                    readOnly: isMentor() 
                 }}
                 onChange={(editor, data,value) => {
                     handelChange(value)

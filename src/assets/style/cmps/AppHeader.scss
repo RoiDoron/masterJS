@@ -2,6 +2,13 @@
     background-color: var(--clr1);
     color: var(--clr1bg);
     padding-block: 1em;
+    padding: 1em;
+
+    .indicator {
+        color: black;
+        padding: 3px;
+        border-radius: 4px;
+    }
 }
 
 .app-nav {

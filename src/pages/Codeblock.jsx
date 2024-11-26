@@ -1,39 +1,47 @@
 import { useEffect, useState } from "react"
-import { codeServiceLocal } from "../services/code-block.service-local"
 import { useNavigate, useParams } from "react-router"
 import { TextEditor } from "../cmps/TextEditor"
 import { codeService } from "../services/code-block.service"
+import { socketService } from "../services/socket.service"
+import { useSelector } from "react-redux"
 
 
 export function Codeblock() {
     const navigate = useNavigate()
-    const [code, setCode] = useState()
+    const [code, setCode] = useState(null)
+    const role = useSelector(storeState => storeState.roleModule.role)
     const { codeId } = useParams()
-    const mentor = false // need to continue
 
+    
     useEffect(() => {
         if (!code) loadCode()
+        
     }, [])
 
-    function loadCode() {
-        console.log('hi')
-        codeService.getById(codeId)
-            .then(code => {
-                setCode(code)
-            })
-            .catch(err => {
-                console.log('Hade issues wite loading code', err)
-                navigate('/')
-            })
+    function codeEdit(newCode){
+
+    }
+    
+
+    async function loadCode() {
+        try {
+            const code = await codeService.getById(codeId)
+            console.log(code)
+            setCode(code)
+        }
+        catch (err) {
+            console.log('Hade issues wite loading code', err)
+            navigate('/')
+        }
     }
 
-    if (!code) return <div>Loading ...</div>
+
+    if (code === null || role === null) return <div>Loading ...</div>
     return (
         <section className="code-block  flex align-center column">
-            {mentor ? <div className="indicator" style={{backgroundColor:'#c3eddf'}}>Mentor</div>
-                : <div className="indicator" style={{backgroundColor:'#ee9b00'}}>Student</div>}
+            
             <h1>{code.name}</h1>
-            <TextEditor initialCode={code.initialCode} solution={code.solution} isMentor={mentor} />
+            <TextEditor initialCode={code.initialCode} solution={code.solution} role={role} />
         </section>
     )
 }
