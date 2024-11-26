@@ -2,8 +2,10 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { TextEditor } from "../cmps/TextEditor"
 import { codeService } from "../services/code-block.service"
-import { socketService } from "../services/socket.service"
-import { useSelector } from "react-redux"
+import { SOCKET_EVENT_EDIT_CODE, SOCKET_EVENT_MENTOR_LEAVE, socketService } from "../services/socket.service"
+import { useDispatch, useSelector } from "react-redux"
+import { UPDATE_CODE } from "../store/reducers/code.reducer"
+import { getActionEditCode, updateCode } from "../store/actions/code.action"
 
 
 export function Codeblock() {
@@ -12,21 +14,33 @@ export function Codeblock() {
     const role = useSelector(storeState => storeState.roleModule.role)
     const { codeId } = useParams()
 
-    
+
     useEffect(() => {
         if (!code) loadCode()
+            
+            socketService.on(SOCKET_EVENT_MENTOR_LEAVE, (instructor)=>{
+                console.log('hi',instructor)
+                backToLooby()
+            })
+
+            
+    }, [code])
+
+    function codeEdit(newCode) {
         
-    }, [])
-
-    function codeEdit(newCode){
-
+        const updatedCode = code
+        updatedCode.studentCode = newCode
+        updateCode(updatedCode)
     }
-    
+
+    function backToLooby(){
+        navigate('/')
+    }
+
 
     async function loadCode() {
         try {
             const code = await codeService.getById(codeId)
-            console.log(code)
             setCode(code)
         }
         catch (err) {
@@ -39,9 +53,9 @@ export function Codeblock() {
     if (code === null || role === null) return <div>Loading ...</div>
     return (
         <section className="code-block  flex align-center column">
-            
+
             <h1>{code.name}</h1>
-            <TextEditor initialCode={code.initialCode} solution={code.solution} role={role} />
+            <TextEditor codeEdit={codeEdit} initialCode={code.studentCode} solution={code.solution} role={role} />
         </section>
     )
 }
