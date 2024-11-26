@@ -4,21 +4,23 @@ import { codeServiceLocal } from "../services/code-block.service-local";
 import { codeService } from "../services/code-block.service";
 import { setRole } from "../store/actions/role.action";
 import { useSelector } from "react-redux";
-import { SOCKET_EVENT_ASSIGN_ROLE, SOCKET_EMIT_MY_ROLE, socketService } from "../services/socket.service";
+import { SOCKET_EMIT_MY_ROLE, SOCKET_EVENT_ASSIGN_ROLE, SOCKET_EVENT_MENTOR_LOGGED_IN, socketService } from "../services/socket.service";
+import { loadCodes } from "../store/actions/code.action";
 
 
 export function Lobby() {
-    const [codes, setCodes] = useState()
+    // const [codes, setCodes] = useState()
     const role = useSelector(storeState => storeState.roleModule.role)
+    const codes = useSelector(storeState => storeState.codeModule.codes)
 
     useEffect(() => {
-        if (!codes) loadCodes()
+         loadCodes()
 
         socketService.emit(SOCKET_EMIT_MY_ROLE, role);
 
-        socketService.on(SOCKET_EVENT_ASSIGN_ROLE, (role) => {
-            console.log("Received role:", role);
-            setRole(role)
+        socketService.on(SOCKET_EVENT_ASSIGN_ROLE, (data) => {
+            codeService.saveSocketId(data.socketId,data.role)
+            setRole(data.role)
         });
 
         return () => {
@@ -27,10 +29,7 @@ export function Lobby() {
 
     }, [])
 
-    function loadCodes() {
-        console.log('load code')
-        codeService.query().then(codes => setCodes(codes))
-    }
+    
     return (
         <section className="lobby flex column align-center">
             <h1>Choose code block</h1>
