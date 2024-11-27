@@ -1,4 +1,4 @@
-import { SET_ROLE, SET_STUDENT_COUNT } from "../reducers/role.reducer";
+import { SET_ROLE, SET_STUDENT_COUNT, SET_WHERE_MENTOR } from "../reducers/role.reducer";
 import { store } from "../store";
 
 export function setRole(role) {
@@ -8,4 +8,10 @@ export function setRole(role) {
 
 export function setStudentCount(studentCount) {
     store.dispatch({ type: SET_STUDENT_COUNT, studentCount })
+}
+
+export function setMentorPosition(mentorPosition) {
+    console.log(mentorPosition);
+    
+    store.dispatch({ type: SET_WHERE_MENTOR, mentorPosition })
 }
