@@ -21,10 +21,6 @@ function getById(codeId) {
     return httpService.get(BASE_URL + codeId)
 }
 
-function remove(codeId) {
-    return httpService.delete(BASE_URL + codeId)
-}
-
 function save(code) {
     const data ={
         code,
@@ -36,15 +32,6 @@ function save(code) {
         return httpService.put(BASE_URL+code._id, data)
     } else {
         return httpService.post(BASE_URL, code)
-    }
-}
-
-function getEmptyCode() {
-    return {
-        name: '',
-        initialCode: '',
-        solution: '',
-        createdAt: Date.now(),
     }
 }
 
@@ -60,6 +47,22 @@ function saveSocketId(socketId,role){
 function getSocketId() {
     return JSON.parse(sessionStorage.getItem(STORAGE_KEY_SOCKET_ID))
 }
+
+// not used but for basic crud
+
+function remove(codeId) { 
+    return httpService.delete(BASE_URL + codeId)
+}
+
+function getEmptyCode() {
+    return {
+        name: '',
+        initialCode: '',
+        solution: '',
+        createdAt: Date.now(),
+    }
+}
+
 
 
 

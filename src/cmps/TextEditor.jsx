@@ -9,23 +9,24 @@ import { getActionEditCode } from "../store/actions/code.action";
 import { SOCKET_EVENT_EDIT_CODE } from "../services/socket.service";
 
 export function TextEditor({ initialCode, role, solution, codeEdit }) {
-    const [code1, setCode] = useState(initialCode)
+    const [code, setCode] = useState(initialCode)
 
     const dispatch = useDispatch()
 
     useState(() => {
-        socketService.on(SOCKET_EVENT_EDIT_CODE, (code) => {
-            dispatch(getActionEditCode(code))
+        // socket for dispatching the changes on every one that sees the codeblock 
+        socketService.on(SOCKET_EVENT_EDIT_CODE, (code) => {  
+            dispatch(getActionEditCode(code)) 
             console.log(code);
 
-            setCode(code.studentCode)
+            setCode(code.studentCode) // editing on the student code and not the initial
         })
 
         return () => {
             socketService.off(SOCKET_EVENT_EDIT_CODE)
         }
-        
-    }, [code1])
+
+    }, [code])
 
     function handleChange(newCode) {
         setCode(newCode)
@@ -34,7 +35,7 @@ export function TextEditor({ initialCode, role, solution, codeEdit }) {
     }
 
     function success() {
-        showSuccessMsg('Congratulation! you are correct!')
+        showSuccessMsg('Congratulation! you are correct!') // on success pop up the smile
     }
 
     function isMentor() {
@@ -44,18 +45,22 @@ export function TextEditor({ initialCode, role, solution, codeEdit }) {
 
     return (
         <>
-            <CodeMirror
-                value={code1}
-                options={{
-                    mode: 'javascript',
-                    theme: 'material',
-                    lineNumbers: true,
-                    readOnly: isMentor(),
-                }}
-                onBeforeChange={(editor, data, value) => {
-                    handleChange(value);
-                }}
-            />
+        {/* using lib "codemirror" to show the code with syntax highlighting   */}
+            <div className="code-mirror">
+                <CodeMirror
+                    value={code}
+                    options={{
+                        mode: 'javascript',
+                        theme: 'material',
+                        lineNumbers: true,
+                        readOnly: isMentor(),
+                    }}
+                    onBeforeChange={(editor, data, value) => {
+                        handleChange(value);
+                    }}
+                />
+            </div>
+            {/* the massage that will pop if the student correct */}
             <UserMsg />
         </>
     )

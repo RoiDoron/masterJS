@@ -18,19 +18,6 @@ export function loadCodes() {
         
 }
 
-// export function updateCode(studentCode) {
-//     return codeService.save(studentCode)
-//         .then(updatedCode => {
-//             store.dispatch(getActionEditCode(updatedCode))
-//             return updatedCode
-//         })
-//         .catch(err => {
-//             console.log('code action -> Cannot update code', err)
-//             throw err
-//         })
-// }
-
-
 export async function updateCode(studentCode) {
     try {
         const savedCode = await codeService.save(studentCode)

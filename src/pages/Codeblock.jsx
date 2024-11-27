@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { TextEditor } from "../cmps/TextEditor"
 import { codeService } from "../services/code-block.service"
-import { SOCKET_EMIT_MY_ROLE, SOCKET_EVENT_ASSIGN_ROLE, SOCKET_EVENT_EDIT_CODE, SOCKET_EVENT_MENTOR_LEAVE, SOCKET_EVENT_STUDENT_COUNT, socketService } from "../services/socket.service"
-import { useDispatch, useSelector } from "react-redux"
+import { SOCKET_EMIT_MY_ROLE, SOCKET_EVENT_ASSIGN_ROLE, SOCKET_EVENT_MENTOR_LEAVE, SOCKET_EVENT_STUDENT_COUNT, socketService } from "../services/socket.service"
+import { useSelector } from "react-redux"
 import { updateCode } from "../store/actions/code.action"
 import { setRole, setStudentCount } from "../store/actions/role.action"
 
@@ -11,9 +11,10 @@ import { setRole, setStudentCount } from "../store/actions/role.action"
 export function Codeblock() {
     const navigate = useNavigate()
     const [code, setCode] = useState(null)
-    const codeRef = useRef()
     const role = useSelector(storeState => storeState.roleModule.role)
     const { codeId } = useParams()
+
+    // using two useEffect that the re-render from the use effect doesn't effect on the sockets 
 
     useEffect(() => {
         if (!code) loadCode()
@@ -24,27 +25,21 @@ export function Codeblock() {
         }
     }, [code])
 
-
     useEffect(() => {
-        console.log('render useEffect sockets');
-        console.log(role);
-
         if (role === '') {
 
-            socketService.emit(SOCKET_EMIT_MY_ROLE, role);
+            socketService.emit(SOCKET_EMIT_MY_ROLE, role); // doing emit to let the server now my role and start the socket
 
-            socketService.on(SOCKET_EVENT_ASSIGN_ROLE, (data) => {
+            socketService.on(SOCKET_EVENT_ASSIGN_ROLE, (data) => { // listening to the assign role socket
                 codeService.saveSocketId(data.socketId, data.role)
                 setRole(data.role)
             });
         }
-        socketService.on(SOCKET_EVENT_STUDENT_COUNT, Count => {
-            console.log('hi from student count!!')
-
+        socketService.on(SOCKET_EVENT_STUDENT_COUNT, Count => { // socket for the student count that contain it in the store for the app header to show it
             setStudentCount(Count)
         })
 
-        socketService.on(SOCKET_EVENT_MENTOR_LEAVE, (instructor) => {
+        socketService.on(SOCKET_EVENT_MENTOR_LEAVE, (instructor) => { //listening to leave instructor when he leave its trigger the socket and navigate everyone back
             navigate('/')
         })
 
@@ -61,10 +56,7 @@ export function Codeblock() {
 
     function cleanUp() {
         socketService.emit('leave-room', role)
-        if (role === 'instructor') {
-            console.log('instructor left the codeblock');
-            setRole('')
-        } else if (role === 'student') {
+        if (role === 'instructor' ||role === 'student') { //this if is to prevent after first render to determent the role it will not triggered
             setRole('')
         }
     }
@@ -74,11 +66,6 @@ export function Codeblock() {
         const updatedCode = code
         updatedCode.studentCode = newCode
         updateCode(updatedCode)
-    }
-
-    function backToLooby() {
-        setRole('')
-        navigate('/')
     }
 
     async function loadCode() {

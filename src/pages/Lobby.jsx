@@ -8,7 +8,7 @@ export function Lobby() {
     const codes = useSelector(storeState => storeState.codeModule.codes)
 
     useEffect(() => {
-         loadCodes()
+         loadCodes() // load all codes to the store for editing theme on real time on every user
     }, [])
 
     return (
@@ -17,8 +17,8 @@ export function Lobby() {
 
             {codes ?
                 (codes.map(code => (
-                    <Link className="tasks-link" key={code._id} to={`/codeblock/${code._id}`}>
-                        <h3>{code.name}</h3>
+                    <Link className="task-link" key={code._id} to={`/codeblock/${code._id}`}>
+                        <h4>{code.name}</h4>
                     </Link>)))
                 : <div>is loading</div>
             }

@@ -1,3 +1,5 @@
+//some util function
+
 export const utilService = {
     makeId,
     makeLorem,
