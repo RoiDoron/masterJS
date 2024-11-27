@@ -2,7 +2,6 @@ import { SET_ROLE, SET_STUDENT_COUNT, SET_WHERE_MENTOR } from "../reducers/role.
 import { store } from "../store";
 
 export function setRole(role) {
-    console.log('i am working',role);
     store.dispatch({ type: SET_ROLE, role })
 }
 
@@ -11,7 +10,5 @@ export function setStudentCount(studentCount) {
 }
 
 export function setMentorPosition(mentorPosition) {
-    console.log(mentorPosition);
-    
     store.dispatch({ type: SET_WHERE_MENTOR, mentorPosition })
 }

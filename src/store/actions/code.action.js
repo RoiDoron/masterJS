@@ -6,15 +6,14 @@ export function getActionEditCode(code){
     return { type: UPDATE_CODE, code }
 }
 
-export function loadCodes() {
-    return codeService.query()
-        .then(codes => {
-            store.dispatch({ type: SET_CODES, codes })
-        })
-        .catch(err => {
+export async function loadCodes() {
+    try{
+        const codes = await codeService.query()
+        store.dispatch({ type: SET_CODES, codes })
+    } catch(err) {
             console.log('code action -> Cannot load codes', err)
             throw err
-        })
+        }
         
 }
 
