@@ -19,7 +19,7 @@ export function Codeblock() {
         if (!code) loadCode()
 
         return () => {
-            if (code === null) return
+            if (code === null || role === 'student') return
             codeEdit(code.initialCode)
         }
     }, [code])
@@ -28,11 +28,11 @@ export function Codeblock() {
     useEffect(() => {
         console.log('render useEffect sockets');
         console.log(role);
-        
+
         if (role === '') {
-            
+
             socketService.emit(SOCKET_EMIT_MY_ROLE, role);
-            
+
             socketService.on(SOCKET_EVENT_ASSIGN_ROLE, (data) => {
                 codeService.saveSocketId(data.socketId, data.role)
                 setRole(data.role)
@@ -40,14 +40,14 @@ export function Codeblock() {
         }
         socketService.on(SOCKET_EVENT_STUDENT_COUNT, Count => {
             console.log('hi from student count!!')
-            
+
             setStudentCount(Count)
         })
-        
+
         socketService.on(SOCKET_EVENT_MENTOR_LEAVE, (instructor) => {
             navigate('/')
         })
-        
+
         return () => {
             console.log(role);
             socketService.off(SOCKET_EVENT_STUDENT_COUNT)
@@ -64,7 +64,7 @@ export function Codeblock() {
         if (role === 'instructor') {
             console.log('instructor left the codeblock');
             setRole('')
-        }else if (role === 'student') {
+        } else if (role === 'student') {
             setRole('')
         }
     }
