@@ -11,6 +11,9 @@ export const SOCKET_EVENT_ASSIGN_ROLE = 'assignRole'
 export const SOCKET_EVENT_MENTOR_LEAVE = 'mentor-leave'
 export const SOCKET_EVENT_MENTOR_LOGGED_IN = 'is-instructor-logged-in'
 
+// student count 
+export const SOCKET_EVENT_STUDENT_COUNT = 'student-count'
+
 
 
 const baseUrl = (process.env.NODE_ENV === 'production') ? '' : '//localhost:3030'
