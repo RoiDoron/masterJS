@@ -6,7 +6,7 @@ import { SOCKET_EMIT_MY_ROLE, SOCKET_EVENT_ASSIGN_ROLE, SOCKET_EVENT_EDIT_CODE, 
 import { useDispatch, useSelector } from "react-redux"
 import { UPDATE_CODE } from "../store/reducers/code.reducer"
 import { getActionEditCode, updateCode } from "../store/actions/code.action"
-import { setRole } from "../store/actions/role.action"
+import { setRole, setStudentCount } from "../store/actions/role.action"
 
 
 export function Codeblock() {
@@ -23,18 +23,23 @@ export function Codeblock() {
 
         socketService.on(SOCKET_EVENT_ASSIGN_ROLE, (data) => {
             codeService.saveSocketId(data.socketId, data.role)
+            console.log(data.studentCount);
+
+            setStudentCount(data.studentCount)
             setRole(data.role)
         });
 
         socketService.on(SOCKET_EVENT_MENTOR_LEAVE, (instructor) => {
-            console.log('hi', instructor)
             backToLooby()
         })
 
         return () => {
             socketService.off(SOCKET_EVENT_ASSIGN_ROLE)
             socketService.off(SOCKET_EVENT_MENTOR_LEAVE)
-            socketService.emit('leave-room', role)
+            if (role === 'instructor') {
+                codeEdit(code.initialCode)
+                socketService.emit('leave-room', role)
+            }
         }
 
 
@@ -52,7 +57,6 @@ export function Codeblock() {
         navigate('/')
     }
 
-
     async function loadCode() {
         try {
             const code = await codeService.getById(codeId)
@@ -63,7 +67,6 @@ export function Codeblock() {
             navigate('/')
         }
     }
-
 
     if (code === null || role === null) return <div>Loading ...</div>
     return (
